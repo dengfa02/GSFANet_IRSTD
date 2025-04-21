@@ -24,11 +24,11 @@ IRSTD-1K [Download](https://github.com/RuiZhang97/ISNet) //
 
 **Weights**: 
 
-[Weight](weight\NUAA-SIRST\weight-NUAA-SIRST.pkl) for SIRST 
+[Weight](weight/NUAA-SIRST/weight-NUAA-SIRST.pkl) for SIRST 
 
-[Weight](weight\NUDT-SIRST\weight-NUDT-SIRST.pkl) for NUDT-SIRST 
+[Weight](weight/NUDT-SIRST/weight-NUDT-SIRST.pkl) for NUDT-SIRST 
 
-[Weight](weight\IRSTD-1k\weight-IRSTD-1k.pkl) for IRSTD-1k
+[Weight](weight/IRSTD-1k/weight-IRSTD-1k.pkl) for IRSTD-1k
 
 
 ## Usage
