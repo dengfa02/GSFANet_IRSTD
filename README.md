@@ -7,11 +7,11 @@ by Chuiyi Deng et al.
 The core code will be made public after the acceptance of the paper.
 
 ## Motivation
-<img src="https://uy.wzznft.com/i/2025/04/21/vg2o69.png" alt="Motivation" style="width: 800px; height: auto;">
+<img src="https://i.ibb.co/HTsRp3zK/fig1.png" alt="Motivation" style="width: 800px; height: auto;">
 
 ## Structure and Results
-<img src="https://uy.wzznft.com/i/2025/04/21/ug4s91.png" alt="Structure" style="width: 800px; height: auto;">
-<img src="https://uy.wzznft.com/i/2025/04/21/uha4sn.png" alt="Results" style="width: 800px; height: auto;">
+<img src="https://i.ibb.co/J9RLML2/fig2.png" alt="Structure" style="width: 800px; height: auto;">
+<img src="https://i.ibb.co/CKcQs5zd/image.png" alt="Results" style="width: 800px; height: auto;">
 
 ## Domains
 
