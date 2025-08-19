@@ -1,6 +1,3 @@
-import numpy as np
-from torch.nn import init
-
 from utils.data import *
 from utils.metric_basic import *
 from argparse import ArgumentParser
@@ -15,7 +12,6 @@ from tqdm import tqdm
 import os.path as osp
 import os
 import time
-import matplotlib.pyplot as plt
 import cv2
 
 
@@ -24,12 +20,11 @@ def parse_args():
     # Setting parameters
     #
     parser = ArgumentParser(description='Implement of model')
-    parser.add_argument('--dataset-dir', type=str, default='../../../../data/dcy/')
+    parser.add_argument('--dataset-root', type=str, default='./dataset', help='root directory')
     parser.add_argument('--dataset', type=str, default='NUDT-SIRST',
                         help='dataset name:  NUDT-SIRST(50:50/256), IRSTD-1k(80:20/512), NUAA-SIRST(50:50/256)')
-    parser.add_argument('--root', type=str, default='../../../../data/dcy')
     parser.add_argument('--batch-size', type=int, default=8)
-    parser.add_argument('--epochs', type=int, default=1500, help='bigmodule1000')
+    parser.add_argument('--epochs', type=int, default=1500, help='')
     parser.add_argument('--lr', type=float, default=0.001, help='adam0.001,adagrad0.05')
     parser.add_argument('--warm-epoch', type=int, default=10)
     parser.add_argument('--ngpu', type=int, default=0, help='GPU number')
@@ -39,11 +34,11 @@ def parse_args():
     parser.add_argument('--multi-gpus', type=bool, default=False)
     parser.add_argument('--if-checkpoint', type=bool, default=False)
 
-    parser.add_argument('--mode', type=str, default='train', help='train or test')  # The test can be conducted by directly modifying the parameters.
-    parser.add_argument('--weight-path', type=str, default='', help='path to weights')
+    parser.add_argument('--mode', type=str, default='test', help='train or test')  # The test can be conducted by directly modifying the parameters.
+    parser.add_argument('--weight-path', type=str, default='/home/dcy/GSFANet/weight/NUDT-SIRST/weight-NUDT-SIRST.pkl', help='path to weights')
 
     args = parser.parse_args()
-    # 根据dataset自动设置尺寸，无需手动改
+    # 根据dataset自动设置输入尺寸
     if args.dataset == 'IRSTD-1k':
         args.base_size = 512 if args.base_size is None else args.base_size
         args.crop_size = 512 if args.crop_size is None else args.crop_size
@@ -103,7 +98,7 @@ class Trainer(object):
         self.scheduler = GradualWarmupScheduler(self.optimizer, multiplier=1, total_epoch=self.warm_epoch,
                                                 after_scheduler=scheduler_cosine)
 
-        self.loss_fun = AdaFocalLoss()
+        self.loss_fun = AdaFocalLoss()  # It can be replaced with Softiouloss or focal loss
         self.PD_FA = PD_FA()
         self.mIoU = mIoU()
         self.ROC = ROCMetric(1, 10)
@@ -128,8 +123,8 @@ class Trainer(object):
                     os.makedirs(self.save_folder)
         if args.mode == 'test':
             weight = torch.load(args.weight_path, map_location=f'cuda:{args.ngpu}')
-            self.model.load_state_dict(weight,
-                                       strict=False)  # checkpoint continue training: weight['state_dict'] test:weight
+            self.model.load_state_dict(weight, strict=False)
+            # checkpoint continue training: weight['state_dict'] / test:weight
             self.warm_epoch = -1
 
     def train(self, epoch):
@@ -193,15 +188,6 @@ class Trainer(object):
             prec, recall, fmeasure = self.F_metric.get()
 
             if self.mode == 'train':
-                if fmeasure > self.best_fmeasure:
-                    self.best_fmeasure = fmeasure
-                    torch.save(self.model.state_dict(),
-                               self.save_folder + '/Epoch%s-weight-%s-bestf%s.pkl' % (
-                                   epoch, args.dataset, self.best_fmeasure))  # 训练时最优模型保存
-                    with open(osp.join(self.save_folder, 'metric.log'), 'a') as f:
-                        f.write('{} - {:05d}\t - IoU {:.5f}\t - F1 {:.5f}\t - PD {:.5f}\t - FA {:.5f}\n'.
-                                format(time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time())),
-                                       epoch, results1[1], self.best_fmeasure, results2[0], results2[1] * 1000000))
                 if results1[1] > self.best_iou:
                     self.best_iou = results1[1]
 
@@ -223,7 +209,6 @@ class Trainer(object):
 
 if __name__ == '__main__':
     args = parse_args()
-
     trainer = Trainer(args)
 
     if trainer.mode == 'train':
