@@ -30,7 +30,7 @@ If you find this paper helpful and inspiring, please cite the following format:
 Scipy error may be displayed during runtime, just update it to the latest version (e.g. 1.11.2).
 
 `einops -> 0.8.0`
-`pypywavelets -> 1.5.0`
+`pywavelets -> 1.5.0`
 
 **Dataset**: SIRST-v1 [Download](https://github.com/YimianDai/sirst) //
 NUDT-SIRST [Download](https://github.com/YeRen123455/Infrared-Small-Target-Detection) //
