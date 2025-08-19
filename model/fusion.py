@@ -28,7 +28,6 @@ class LowPassConvGenerator(nn.Module):
             avg_feature_x = self.avg_pool(x_i)  # b, c/num_k, 1, 1
             max_feature_x = self.max_pool(x_i)  # b, c/num_k, 1, 1
 
-            # 使用当前分割的特征图生成卷积核
             fc1 = self.fc1_list[i]
             fc2 = self.fc2_list[i]
 
@@ -40,8 +39,6 @@ class LowPassConvGenerator(nn.Module):
             kernel = kernel.reshape(b, c, 3, 3)[0].unsqueeze(1)  # (c/num_k, 1, 3, 3)
 
             kernels.append(kernel)
-
-        # 将所有生成的卷积核拼接在一起
         final_kernel = torch.cat(kernels, dim=0)  # (num_k * c, 1, 3, 3)
 
         return final_kernel
@@ -52,10 +49,6 @@ class HighPassConvGenerator(nn.Module):
     def __init__(self, in_channel, num_k=2, kernel_size=3, ratio=8):
         super(HighPassConvGenerator, self).__init__()
         self.num_k = num_k
-        # assert kernel_size in (3, 7), 'kernel size must be 3 or 7'
-        # padding = 3 if kernel_size == 7 else 1
-        # self.conv1 = nn.Conv2d(2, 9 * in_channel, kernel_size, padding=padding, bias=False)
-        # self.max_pool = nn.AdaptiveMaxPool2d(1)
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.max_pool = nn.AdaptiveMaxPool2d(1)
         self.fc1_list = nn.ModuleList(
@@ -63,8 +56,7 @@ class HighPassConvGenerator(nn.Module):
         self.fc2_list = nn.ModuleList(
             [nn.Conv2d(in_channel // ratio, 9 * in_channel, 1, bias=False) for _ in range(num_k)])
         self.relu = nn.ReLU(inplace=True)
-        # self.conv1_list = nn.ModuleList(
-        #     [nn.Conv2d(in_channel // num_k, in_channel // ratio, 3, bias=False) for _ in range(num_k)])
+
         self.identity_kernel = nn.Parameter(torch.tensor([[0, 0, 0],
                                                           [0, 1, 0],
                                                           [0, 0, 0]], dtype=torch.float32).unsqueeze(0).unsqueeze(0),
@@ -81,10 +73,6 @@ class HighPassConvGenerator(nn.Module):
 
             avg_feature_x = self.avg_pool(x_i)  # b, c/num_k, 1, 1
             max_feature_x = self.max_pool(x_i)  # b, c/num_k, 1, 1
-            # conv1 = self.conv1_list[i]
-            # kernel = self.avg_pool(self.relu(conv1(x_i)))  # b, c/num_k, 1, 1
-
-            # 使用当前分割的特征图生成卷积核
             fc1 = self.fc1_list[i]
             fc2 = self.fc2_list[i]
 
@@ -96,12 +84,9 @@ class HighPassConvGenerator(nn.Module):
             kernel = kernel.reshape(b, c, 3, 3)[0].unsqueeze(1)  # (c/num_k, 1, 3, 3)
 
             kernels.append(self.identity_kernel - kernel)
-
-        # 将所有生成的卷积核拼接在一起
         final_kernel = torch.cat(kernels, dim=0)  # (num_k * c, 1, 3, 3)
 
         return final_kernel
-
 
 
 class Freq_Fusion(nn.Module):
