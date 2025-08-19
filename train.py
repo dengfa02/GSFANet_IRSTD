@@ -24,7 +24,8 @@ def parse_args():
     parser.add_argument('--dataset', type=str, default='NUDT-SIRST',
                         help='dataset name:  NUDT-SIRST(50:50/256), IRSTD-1k(80:20/512), NUAA-SIRST(50:50/256)')
     parser.add_argument('--batch-size', type=int, default=8)
-    parser.add_argument('--epochs', type=int, default=1500, help='')
+    parser.add_argument('--epochs', type=int, default=1500,
+                        help='It often takes 1000+ epochs with the Transformer to achieve complete convergence')
     parser.add_argument('--lr', type=float, default=0.001, help='adam0.001,adagrad0.05')
     parser.add_argument('--warm-epoch', type=int, default=10)
     parser.add_argument('--ngpu', type=int, default=0, help='GPU number')
