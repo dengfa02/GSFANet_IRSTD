@@ -1,7 +1,7 @@
 # *<center>GSFANet: Global Spatial-Frequency Attention Network for Infrared Small Target Detection</center>*
 
 This repository contains the algorithm done in the
-work [GSFANet: Global Spatial-Frequency Attention Network for Infrared Small Target Detection](https://github.com/dengfa02/GSFANet)
+work [GSFANet: Global Spatial-Frequency Attention Network for Infrared Small Target Detection](https://github.com/dengfa02/GSFANet_IRSTD)
 by Chuiyi Deng et al. 
 
 **Update**:Thanks to the efforts of the editor and all the reviewers, our work has been accepted by `IEEE TGRS 2025`.
