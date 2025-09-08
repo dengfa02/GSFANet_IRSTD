@@ -14,9 +14,9 @@ class AdaFocalLoss(nn.Module):
         area_weight = self._get_area_weight(target)  # [N,1,1,1]
         smooth = 1
 
-        intersection = pred * target
-        iou = (intersection.sum() + smooth) / (pred.sum() + target.sum() - intersection.sum() + smooth)
-        iou = torch.clamp(iou, min=1e-6, max=1 - 1e-6)
+        intersection = pred.sigmoid() * target
+        iou = (intersection.sum() + smooth) / (pred.sigmoid().sum() + target.sum() - intersection.sum() + smooth)
+        iou = torch.clamp(iou, min=1e-6, max=1 - 1e-6).detach()
         BCE_loss = F.binary_cross_entropy_with_logits(pred, target, reduction='none')  # 自带sigmoid
 
         target = target.type(torch.long)
