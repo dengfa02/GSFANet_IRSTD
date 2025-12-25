@@ -46,7 +46,7 @@ IRSTD-1K [Download](https://github.com/RuiZhang97/ISNet) //
 
 
 ## Usage
-* Run `train.py` to perform network training. Example for training GSFANet on 'NUDT-SIRST' datasets:
+* Run `train.py` to perform network training. It should be noted that since the size of the IRDST dataset has been doubled,the 'patch_size' in GSFANet also needs to be expanded by a factor of 2 to [64, 32, 16, 8]. Example for training GSFANet on 'NUDT-SIRST' datasets:
   ```
   $ cd ./GSFANet
   $ python train.py --dataset 'NUDT-SIRST'

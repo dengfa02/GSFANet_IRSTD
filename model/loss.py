@@ -16,7 +16,7 @@ class AdaFocalLoss(nn.Module):
 
         intersection = pred.sigmoid() * target
         iou = (intersection.sum() + smooth) / (pred.sigmoid().sum() + target.sum() - intersection.sum() + smooth)
-        iou = torch.clamp(iou, min=1e-6, max=1 - 1e-6).detach()
+        iou = torch.clamp(iou, min=1e-6, max=1 - 1e-6).detach()  # .detach()根据收敛情况可以选择去除
         BCE_loss = F.binary_cross_entropy_with_logits(pred, target, reduction='none')  # 自带sigmoid
 
         target = target.type(torch.long)
